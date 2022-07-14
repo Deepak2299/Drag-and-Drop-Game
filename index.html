@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Drag and Drop Game</title>
+</head>
+
+<body>
+    <div class="container">
+        
+        <table id="table">
+            <tbody>
+                <tr>
+                    <td id="0">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                    <td id="1">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                    <td id="2">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="3">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                    <td id="4">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                    <td id="5">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="6">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                    <td id="7">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                    <td id="8">
+                        <div draggable="true">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- <div> -->
+            <!-- <h3>After complete move action, You can try new move.</h3> -->
+            <button id="btnUndo" onclick="undoMove()" disabled="true">Undo Move</button>
+        <!-- </div> -->
+       
+    </div>
+   
+    
+    <script src="index.js"></script>
+</body>
+
+</html>
