@@ -57,11 +57,16 @@ const tableList = [
 
 const undoLastMove = [];
 
-// If you want to check slow animation, Please uncomment Code 0, 1, 2, 3 and 5 and comment Code 4 and 6 
+// If you want to check slow animation, Please uncomment Code 0, 1, 2, 3, 5 and 7 and comment Code 4 and 6 
 
 window.onload = function () {
     tableList.forEach(value => {
-        const box = document.getElementById(value.id + '').children[0];
+        const item = document.getElementById(value.id + '');
+        item.addEventListener('dragstart', handleDragStart, false);
+        item.addEventListener('dragover', handleDragOver, false);
+        item.addEventListener('drop', handleDrop, false);
+        item.addEventListener('dragend', handleDragEnd, false);
+        const box= item.children[0];
         box.innerHTML = value.name;
         box.style.backgroundColor = value.backgroundColor;
         box.style.color = value.color;
@@ -74,93 +79,82 @@ window.onload = function () {
 }
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
+function handleDragStart(e) {
+    this.children[0].style.opacity = '0.5';
+    dragSrcEl = this;
+    this.children[0].focus();
+}
 
-    function handleDragStart(e) {
-        this.children[0].style.opacity = '0.5';
-        dragSrcEl = this;
-        this.children[0].focus();
+function handleDragEnd(e) {
+    this.children[0].style.opacity = '1';
+
+    // Code 1
+    // adding animation for drag box 
+    // this.children[0].style.transition = 'left 2s ease-out, top 2s ease-out';
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    this.children[0].focus();
+    return false;
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation(); // stops the browser from redirecting.
     }
 
-    function handleDragEnd(e) {
-        this.children[0].style.opacity = '1';
+    // Code 2
+    //  this.children[0].style.transition = 'left 2s ease-out, top 2s ease-out';
 
-        // Code 1
-        // adding animation for drag box 
-        // this.children[0].style.transition = 'left 2s ease-out, top 2s ease-out';
+    if (dragSrcEl !== this) {
+        box1 = dragSrcEl.children[0];
+        box2 = this.children[0];
+
+        //Code 3
+        // var xE = box2.getBoundingClientRect().left;
+        // var yE = box2.getBoundingClientRect().top;
+        // var xT = box1.getBoundingClientRect().left;
+        // var yT = box1.getBoundingClientRect().top;
+        // box1.style.left = xE + 'px';
+        // box1.style.top = yE + 'px';
+        // console.log("box1", xE, yE);
+        // removing animation for drag box 
+        // box1.style.transition = 'left 0s ease-out, top 0s ease-out';
+
+        // box2.style.left = xE + 'px';
+        // box2.style.top = yE + 'px';
+        // box2.style.left = xT + 'px';
+        // box2.style.top = yT + 'px';
+
+
+        // Code 4
+        const temp = {
+            innerHTML: box1.innerHTML,
+            backgroundColor: box1.style.backgroundColor,
+            color: box1.style.color
+        };
+        box1.innerHTML = box2.innerHTML;
+        box1.style.backgroundColor = box2.style.backgroundColor;
+        box1.style.color = box2.style.color;
+        box2.innerHTML = temp.innerHTML;
+        box2.style.backgroundColor = temp.backgroundColor;
+        box2.style.color = temp.color;
+
+
+        undoLastMove.push({ source: this.id, destination: dragSrcEl.id });
+        document.getElementById('btnUndo').disabled = false;
     }
 
-    function handleDragOver(e) {
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
-        this.children[0].focus();
-        return false;
-    }
+    return false;
 
-    function handleDrop(e) {
-        if (e.stopPropagation) {
-            e.stopPropagation(); // stops the browser from redirecting.
-        }
+}
 
-        // Code 2
-        // this.children[0].style.transition = 'left 2s ease-out, top 2s ease-out';
-
-        if (dragSrcEl !== this) {
-            box1 = dragSrcEl.children[0];
-            box2 = this.children[0];
-
-            //Code 3
-            // var xE = box2.getBoundingClientRect().left;
-            // var yE = box2.getBoundingClientRect().top;
-            // var xT = box1.getBoundingClientRect().left;
-            // var yT = box1.getBoundingClientRect().top;
-            // box1.style.left = xE + 'px';
-            // box1.style.top = yE + 'px';
-            // console.log("box1", xE, yE);
-            // // removing animation for drag box 
-            // box1.style.transition = 'left 0s ease-out, top 0s ease-out';
-
-            // box2.style.left = xE + 'px';
-            // box2.style.top = yE + 'px';
-            // box2.style.left = xT + 'px';
-            // box2.style.top = yT + 'px';
-
-
-            // Code 4
-            const temp = {
-                innerHTML: box1.innerHTML,
-                backgroundColor: box1.style.backgroundColor,
-                color: box1.style.color
-            };
-            box1.innerHTML = box2.innerHTML;
-            box1.style.backgroundColor = box2.style.backgroundColor;
-            box1.style.color = box2.style.color;
-            box2.innerHTML = temp.innerHTML;
-            box2.style.backgroundColor = temp.backgroundColor;
-            box2.style.color = temp.color;
-
-
-            undoLastMove.push({ source: this.id, destination: dragSrcEl.id });
-            document.getElementById('btnUndo').disabled = false;
-        }
-
-        return false;
-
-    }
-
-    let items = document.querySelectorAll('td');
-    console.log(items)
-    items.forEach(function (item) {
-        item.addEventListener('dragstart', handleDragStart, false);
-        item.addEventListener('dragover', handleDragOver, false);
-        item.addEventListener('drop', handleDrop, false);
-        item.addEventListener('dragend', handleDragEnd, false);
-    });
-});
 
 function undoMove() {
-    if (undoLastMove.length > 0) {
+    if (undoLastMove.length > 0) { 
         const lastMove = undoLastMove.pop();
         if (undoLastMove.length === 0) {
             document.getElementById('btnUndo').disabled = true;
@@ -205,4 +199,38 @@ function moveTarget(element, target) {
     element.style.top = yT + 'px';
     target.style.left = xE + 'px';
     target.style.top = yE + 'px';
+}
+
+// Adding New Row functionality
+
+function addNewRow(){
+    const table = document.getElementById('table');
+    const tbody = table.children[0];
+    const newTr= document.createElement('tr');
+    const lastId = parseInt(tbody.lastElementChild.lastElementChild.id);
+    for(let i=1;i<=3;i++){
+        const newDiv = document.createElement('div');
+        newDiv.setAttribute('draggable','true')
+        const randomColor ='#'+ Math.floor(Math.random()*16777215).toString(16);
+        console.log(randomColor);
+        newDiv.innerHTML = (lastId+i+1)*100;
+        newDiv.style.backgroundColor = randomColor;
+        newDiv.style.color = 'white';
+        
+        // Code 7
+        // newDiv.style.position = 'absolute';
+        // newDiv.style.left = newDiv.getBoundingClientRect().left + 'px';
+        // newDiv.style.top = newDiv.getBoundingClientRect().top + 'px';
+
+        const newTd = document.createElement('td');
+        newTd.setAttribute('id',`${lastId+i}`);
+        newTd.addEventListener('dragstart', handleDragStart, false);
+        newTd.addEventListener('dragover', handleDragOver, false);
+        newTd.addEventListener('drop', handleDrop, false);
+        newTd.addEventListener('dragend', handleDragEnd, false);
+        newTd.appendChild(newDiv);
+        newTr.appendChild(newTd);
+    }
+    tbody.appendChild(newTr);
+
 }

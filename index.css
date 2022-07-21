@@ -40,6 +40,10 @@ td>div {
   transition-delay: 0.5s;
 }
 
+.btns{
+  align-self: center;
+}
+
 #btnUndo {
   align-self: center;
   height: fit-content;
@@ -48,10 +52,21 @@ td>div {
   color: white;
   background-color: red;
   border: 1px solid red;
+  margin-bottom: 20px;
 }
 
 #btnUndo:disabled,
 #btnUndo[disabled]{
   cursor: not-allowed;
   opacity: 0.3;
+}
+
+#btnAddRow {
+  align-self: center;
+  height: fit-content;
+  padding: 10px 20px;
+  border-radius: 12px;
+  color: white;
+  background-color: green;
+  border: 1px solid green;
 }
